@@ -1,9 +1,28 @@
-const fetch = require('node-fetch')
-const CORS = require('micro-cors')()
+var express = require('express');
+var cors = require('cors')
+var app = express()
 
-module.exports = CORS(async () => {
-    const request = await fetch('https://api.github.com/orgs/zeit/members')
-    const data = await request.json()
-  
-    return data
-  })
+app.use(cors())
+
+app.get('/', function (req, res) {
+  var data = {
+    "bestAnimals": [
+      "wombat",
+      "corgi",
+      "puffer fish",
+      "owl",
+      "crow"
+    ]
+  };
+
+  res.json(data);
+});
+
+
+var server = app.listen(3000, function () {
+
+  var port = server.address().port;
+
+  console.log('Listening at port %s', port);
+
+});
