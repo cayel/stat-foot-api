@@ -1,39 +1,41 @@
 var express = require('express');
-var cors = require('cors')
-var app = express()
+var cors = require('cors');
+var app = express();
+var Ranking = require ('./ranking');
 
 app.use(cors())
 
-app.get('/', function (req, res) {
-  var data = {
-    "bestAnimals": [
-      "wombat",
-      "corgi",
-      "puffer fish",
-      "owl",
-      "crow"
-    ]
-  };
+async function loadLeagueSeason(season) {
+  var jsonContent = require("./data/france.json");
+  var arrayFound = jsonContent.filter(function(item) {
+    return item.Season == season-1;
+  });
+  return arrayFound;
+}
 
-  res.json(data);
-});
+async function getRanking(arrayFound) {
+  var ranking = new Ranking();
+  for(i = 0; i< arrayFound.length; i++){ 
+    ranking.addFeature(arrayFound[i].home,arrayFound[i].visitor, arrayFound[i].hgoal, arrayFound[i].vgoal);
+  }          
+  return ranking;
+}
+
+async function order(ranking) {
+  ranking.rank();
+  return ranking;
+}
+
+async function evalLeagueRanking(season) {
+  const leagueSeason = await loadLeagueSeason(season);
+  const leagueRanking = await getRanking(leagueSeason);
+  const orderedLeagueRanking = await order(leagueRanking);
+  return orderedLeagueRanking;
+}
 
 app.get('/ranking', function (req, res) {
   var season = req.query.season;
-  if (season == 2017) {
-    var data = {
-      "PSG": [1,75,30,6,2,67,34],
-      "Olympique Lyonnais": [2,72,28,6,4,73,49],
-      "OM": [3,69,27,6,5,49,42]
-    };  
-  } else if (season == 2016) {
-    var data = {
-      "PSG": [1,71,30,6,2,67,34],
-      "Monaco": [2,65,28,6,4,73,49],
-      "Metz": [3,61,27,6,5,49,42]
-    };  
-  }
-  res.json(data);
+  evalLeagueRanking(season).then( r => res.json(r));
 });
 
 var server = app.listen(3000, function () {
