@@ -4,7 +4,7 @@ var app = express();
 var Ranking = require ('./ranking');
 var swaggerUi = require('swagger-ui-express'),
 
-const PORT = process.env.PORT || 5000
+PORT = process.env.PORT || 5000
 
 swaggerDocument = require('./swagger.json');
 
