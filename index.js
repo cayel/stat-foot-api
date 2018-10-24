@@ -2,6 +2,9 @@ var express = require('express');
 var cors = require('cors');
 var app = express();
 var Ranking = require ('./ranking');
+var swaggerUi = require('swagger-ui-express'),
+
+swaggerDocument = require('./swagger.json');
 
 app.use(cors())
 
@@ -32,6 +35,8 @@ async function evalLeagueRanking(season) {
   const orderedLeagueRanking = await order(leagueRanking);
   return orderedLeagueRanking;
 }
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/ranking', function (req, res) {
   var season = req.query.season;
