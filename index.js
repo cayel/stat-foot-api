@@ -4,6 +4,8 @@ var app = express();
 var Ranking = require ('./ranking');
 var swaggerUi = require('swagger-ui-express'),
 
+const PORT = process.env.PORT || 5000
+
 swaggerDocument = require('./swagger.json');
 
 app.use(cors())
@@ -43,10 +45,8 @@ app.get('/ranking', function (req, res) {
   evalLeagueRanking(season).then( r => res.json(r));
 });
 
-var server = app.listen(3000, function () {
+var server = app.listen(PORT, function () {
 
-  var port = server.address().port;
-
-  console.log('Listening at port %s', port);
+  console.log('Listening at port %s', PORT);
 
 });
