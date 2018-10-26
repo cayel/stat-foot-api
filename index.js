@@ -1,8 +1,9 @@
-var express = require('express');
-var cors = require('cors');
-var app = express();
-var Ranking = require ('./ranking');
-var swaggerUi = require('swagger-ui-express');
+var express = require('express')
+var cors = require('cors')
+var morgan = require('morgan')
+var app = express()
+var Ranking = require ('./ranking')
+var swaggerUi = require('swagger-ui-express')
 const boom = require('boom')
 
 PORT = process.env.PORT || 5000
@@ -37,6 +38,12 @@ async function evalLeagueRanking(season) {
   const leagueRanking = await getRanking(leagueSeason);
   const orderedLeagueRanking = await order(leagueRanking);
   return orderedLeagueRanking;
+}
+
+if (app.get('NODE_ENV') === 'production') {
+  app.use(morgan('combined'));
+} else {
+  app.use(morgan('dev'));
 }
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
