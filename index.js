@@ -54,6 +54,11 @@ app.get('/ranking', function (req, res, next) {
   evalLeagueRanking(season).then( r => res.json(r));
 });
 
+app.use(function(req, res, next) {
+  return next(boom.notFound('Sorry cant find that !'));
+});
+
+
 app.use((err, req, res, next) => {
   if (err.isServer) {
     // log the error...
