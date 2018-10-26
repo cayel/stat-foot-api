@@ -9,8 +9,8 @@
       "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host" : "virtserver.swaggerhub.com",
-  "basePath" : "/cayel5/sandbox-foot-stat/1.0.0",
+  "host" : "calm-forest-73385.herokuapp.com",
+  "basePath" : "",
   "tags" : [ {
     "name" : "developers",
     "description" : "Operations available to regular developers"
