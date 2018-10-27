@@ -40,6 +40,14 @@ async function evalLeagueRanking(season) {
   return orderedLeagueRanking;
 }
 
+async function getHistory(teamHome, teamAway) {
+  var jsonContent = require("./data/france.json");
+  var arrayFound = jsonContent.filter(function(item) {
+    return ((item.home == teamHome) && (item.visitor == teamAway));
+  });
+  return arrayFound;
+}
+
 if (app.get('NODE_ENV') === 'production') {
   app.use(morgan('combined'));
 } else {
@@ -52,6 +60,14 @@ app.get('/ranking', function (req, res, next) {
   var season = req.query.season;
   if (!season) return next(boom.badRequest('missing season'));
   evalLeagueRanking(season).then( r => res.json(r));
+});
+
+app.get('/history', function(req, res, next) {
+  var teamHome = req.query.teamHome;
+  if (!teamHome) return next(boom.badRequest('missing team home'));
+  var teamAway = req.query.teamAway;
+  if (!teamAway) return next(boom.badRequest('missing team away'));
+  getHistory(teamHome,teamAway).then( r => res.json(r));
 });
 
 app.use(function(req, res, next) {
