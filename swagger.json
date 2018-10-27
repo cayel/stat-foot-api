@@ -49,6 +49,42 @@
           }
         }
       }
+    },
+    "/history" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "get opposition history",
+        "description" : "get opposition history",
+        "operationId" : "getHistory",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "teamHome",
+          "in" : "query",
+          "description" : "pass the home team",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "teamAway",
+          "in" : "query",
+          "description" : "pass the visitor team",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "ranking matching criteria",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/HistoryItem"
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          }
+        }
+      }
     }
   },
   "definitions" : {
@@ -135,6 +171,88 @@
         "win" : 5,
         "goalDifference" : -10,
         "goals" : 40
+      }
+    },
+    "HistoryItem" : {
+      "type" : "object",
+      "required" : [ "FT", "date", "division", "goaldif", "hgoal", "home", "id", "result", "season", "tier", "totgoal", "vgoal", "visitor" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "date" : {
+          "type" : "string",
+          "example" : "1956-12-25T00:00:00.000Z"
+        },
+        "season" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1956
+        },
+        "home" : {
+          "type" : "string",
+          "example" : "Stade Rennes"
+        },
+        "visitor" : {
+          "type" : "string",
+          "example" : "AS Monaco"
+        },
+        "FT" : {
+          "type" : "string",
+          "example" : "0-1"
+        },
+        "hgoal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 0
+        },
+        "vgoal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "division" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "tier" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "totgoal" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "goaldif" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "result" : {
+          "type" : "string",
+          "example" : "D",
+          "enum" : [ "D", "H" ]
+        }
+      },
+      "example" : {
+        "date" : "1956-12-25T00:00:00.000Z",
+        "totgoal" : 1,
+        "vgoal" : 1,
+        "FT" : "0-1",
+        "home" : "Stade Rennes",
+        "division" : 1,
+        "result" : "D",
+        "hgoal" : 0,
+        "tier" : 1,
+        "season" : 1956,
+        "id" : 1,
+        "goaldif" : 1,
+        "visitor" : "AS Monaco"
       }
     }
   }
