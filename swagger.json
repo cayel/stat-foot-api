@@ -10,13 +10,34 @@
     }
   },
   "host" : "calm-forest-73385.herokuapp.com",
-  "basePath" : "",
+  "basePath" : "/",
   "tags" : [ {
     "name" : "developers",
     "description" : "Operations available to regular developers"
   } ],
   "schemes" : [ "https" ],
   "paths" : {
+    "/competitions" : {
+      "get" : {
+        "tags" : [ "developers" ],
+        "summary" : "get all competitions",
+        "description" : "retrieves all the available competitions.",
+        "operationId" : "getCompetitions",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "retrieve all available competitions",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CompetitionItem"
+              }
+            }
+          }
+        }
+      }
+    },
     "/ranking" : {
       "get" : {
         "tags" : [ "developers" ],
@@ -253,6 +274,42 @@
         "id" : 1,
         "goaldif" : 1,
         "visitor" : "AS Monaco"
+      }
+    },
+    "CompetitionItem" : {
+      "type" : "object",
+      "required" : [ "competitionName", "countryName", "id", "seasonMax", "seasonMin" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "countryName" : {
+          "type" : "string",
+          "example" : "France"
+        },
+        "competitionName" : {
+          "type" : "string",
+          "example" : "Ligue 1"
+        },
+        "seasonMin" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1933
+        },
+        "seasonMax" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 2017
+        }
+      },
+      "example" : {
+        "seasonMin" : 1933,
+        "competitionName" : "Ligue 1",
+        "id" : 1,
+        "countryName" : "France",
+        "seasonMax" : 2017
       }
     }
   }

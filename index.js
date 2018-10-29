@@ -48,6 +48,25 @@ async function getHistory(teamHome, teamAway) {
   return arrayFound;
 }
 
+function getCompetitions() {
+  return ([
+    {
+      "id": 1,
+      "countryName" : "France",
+      "competitionName" : "Ligue 1",
+      "seasonMin": 1933,
+      "seasonMax": 2017
+    },
+    {
+      "id": 2,
+      "countryName" : "Italy",
+      "competitionName" : "Serie A",
+      "seasonMin": 1935,
+      "seasonMax": 2017
+    }
+  ]);
+}
+
 if (app.get('NODE_ENV') === 'production') {
   app.use(morgan('combined'));
 } else {
@@ -68,6 +87,11 @@ app.get('/history', function(req, res, next) {
   var teamAway = req.query.teamAway;
   if (!teamAway) return next(boom.badRequest('missing team away'));
   getHistory(teamHome,teamAway).then( r => res.json(r));
+});
+
+app.get('/competitions', function (req, res, next) {
+  const dataCompetitions = getCompetitions();
+  res.json(dataCompetitions);
 });
 
 app.use(function(req, res, next) {
