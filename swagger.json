@@ -9,17 +9,13 @@
       "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host" : "calm-forest-73385.herokuapp.com",
-  "basePath" : "/",
-  "tags" : [ {
-    "name" : "developers",
-    "description" : "Operations available to regular developers"
-  } ],
+  "host" : "https://calm-forest-73385.herokuapp.com/",
+  "basePath" : "",
   "schemes" : [ "https" ],
   "paths" : {
     "/competitions" : {
       "get" : {
-        "tags" : [ "developers" ],
+        "tags" : [ "competitions" ],
         "summary" : "get all competitions",
         "description" : "retrieves all the available competitions.",
         "operationId" : "getCompetitions",
@@ -38,42 +34,43 @@
         }
       }
     },
-    "/ranking" : {
+    "/competitions/{competitionId}/ranking" : {
       "get" : {
-        "tags" : [ "developers" ],
-        "summary" : "get season's ranking",
-        "description" : "By passing the right parameters, you get the ranking of the French football championship (called \"Ligue 1\"\") for the season of your choice.\n",
-        "operationId" : "getRanking",
+        "tags" : [ "competitions" ],
+        "summary" : "get the ranking of a season's competition according to the country",
+        "description" : "retrieves ranking for a specific season's competition",
         "produces" : [ "application/json" ],
         "parameters" : [ {
+          "name" : "competitionId",
+          "in" : "path",
+          "description" : "ID of the competition",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
           "name" : "season",
           "in" : "query",
           "description" : "pass a season to get the ranking for this season",
           "required" : true,
           "type" : "integer",
-          "maximum" : 2017,
-          "minimum" : 1933,
           "format" : "int32"
         } ],
         "responses" : {
           "200" : {
-            "description" : "ranking matching criteria",
+            "description" : "retrieve ranking for a specific season's competition",
             "schema" : {
               "type" : "array",
               "items" : {
                 "$ref" : "#/definitions/RankingItem"
               }
             }
-          },
-          "400" : {
-            "description" : "bad input parameter"
           }
         }
       }
     },
     "/history" : {
       "get" : {
-        "tags" : [ "developers" ],
+        "tags" : [ "features" ],
         "summary" : "get opposition history",
         "description" : "get opposition history",
         "operationId" : "getHistory",
