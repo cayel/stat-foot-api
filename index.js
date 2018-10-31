@@ -12,8 +12,10 @@ swaggerDocument = require('./swagger.json');
 
 app.use(cors())
 
-async function loadLeagueSeason(season) {
-  var jsonContent = require("./data/france.json");
+async function loadLeagueSeason(competition, season) {
+  var jsonContent;
+  if (competition == 1) jsonContent = require("./data/france.json");
+  else jsonContent = require("./data/italy.json");
   var arrayFound = jsonContent.filter(function(item) {
     return item.Season == season-1;
   });
@@ -33,8 +35,8 @@ async function order(ranking) {
   return ranking;
 }
 
-async function evalLeagueRanking(season) {
-  const leagueSeason = await loadLeagueSeason(season);
+async function evalLeagueRanking(competition, season) {
+  const leagueSeason = await loadLeagueSeason(competition, season);
   const leagueRanking = await getRanking(leagueSeason);
   const orderedLeagueRanking = await order(leagueRanking);
   return orderedLeagueRanking;
@@ -92,6 +94,14 @@ app.get('/history', function(req, res, next) {
 app.get('/competitions', function (req, res, next) {
   const dataCompetitions = getCompetitions();
   res.json(dataCompetitions);
+});
+
+app.get('/competitions/:id/ranking', function (req, res, next) {
+  var season = req.query.season;
+  var competition = req.params.id;
+  if (!season) return next(boom.badRequest('missing season'));
+  if (!competition) return next(boom.badRequest('missing competition'));
+  evalLeagueRanking(competition,season).then( r => res.json(r))
 });
 
 app.use(function(req, res, next) {
