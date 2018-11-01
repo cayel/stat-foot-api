@@ -1,6 +1,7 @@
 var express = require('express')
 var cors = require('cors')
 var morgan = require('morgan')
+var bodyParser     =        require("body-parser");
 var app = express()
 var Ranking = require ('./ranking')
 var swaggerUi = require('swagger-ui-express')
@@ -11,6 +12,8 @@ PORT = process.env.PORT || 5000
 swaggerDocument = require('./swagger.json');
 
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 async function loadLeagueSeason(competition, season) {
   var jsonContent;
@@ -42,8 +45,10 @@ async function evalLeagueRanking(competition, season) {
   return orderedLeagueRanking;
 }
 
-async function getHistory(teamHome, teamAway) {
-  var jsonContent = require("./data/france.json");
+async function getHistory(idCompetition, teamHome, teamAway) {
+  var jsonContent;
+  if (idCompetition == 1) jsonContent = require("./data/france.json");
+  else jsonContent = require("./data/italy.json");
   var arrayFound = jsonContent.filter(function(item) {
     return ((item.home == teamHome) && (item.visitor == teamAway));
   });
@@ -83,14 +88,6 @@ app.get('/ranking', function (req, res, next) {
   evalLeagueRanking(season).then( r => res.json(r));
 });
 
-app.get('/history', function(req, res, next) {
-  var teamHome = req.query.teamHome;
-  if (!teamHome) return next(boom.badRequest('missing team home'));
-  var teamAway = req.query.teamAway;
-  if (!teamAway) return next(boom.badRequest('missing team away'));
-  getHistory(teamHome,teamAway).then( r => res.json(r));
-});
-
 app.get('/competitions', function (req, res, next) {
   const dataCompetitions = getCompetitions();
   res.json(dataCompetitions);
@@ -104,6 +101,21 @@ app.get('/competitions/:id/ranking', function (req, res, next) {
   evalLeagueRanking(competition,season).then( r => res.json(r))
 });
 
+app.post('/matchs/search', function (req, res, next) {  
+  try {
+    var idCompetition=req.body.idCompetition;
+    var teamHome=req.body.teamHome;
+    var teamAway=req.body.teamAway;
+    if (!idCompetition) return next(boom.badRequest('competition missing'));
+    if (!teamHome) return next(boom.badRequest('home team missing'));
+    if (!teamAway) return next(boom.badRequest('away team missing'));
+    getHistory(idCompetition,teamHome,teamAway).then( r => res.json(r));    
+  }
+  catch(e) {
+    return next(boom.badRequest('bad parameters'));
+  }  
+});
+
 app.use(function(req, res, next) {
   return next(boom.notFound('Sorry cant find that !'));
 });
@@ -111,9 +123,7 @@ app.use(function(req, res, next) {
 
 app.use((err, req, res, next) => {
   if (err.isServer) {
-    // log the error...
-    // probably you don't want to log unauthorized access
-    // or do you?
+    console.log(req);
   }
   return res.status(err.output.statusCode).json(err.output.payload);
 })
