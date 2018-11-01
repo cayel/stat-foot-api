@@ -9,7 +9,7 @@
       "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host" : "https://calm-forest-73385.herokuapp.com/",
+  "host" : "http://calm-forest-73385.herokuapp.com",
   "basePath" : "",
   "schemes" : [ "https" ],
   "paths" : {
@@ -64,6 +64,39 @@
                 "$ref" : "#/definitions/RankingItem"
               }
             }
+          }
+        }
+      }
+    },
+    "matchs/search" : {
+      "post" : {
+        "tags" : [ "matchs" ],
+        "summary" : "search specifics matchs",
+        "description" : "search specifics matchs",
+        "operationId" : "searchMatchs",
+        "consumes" : [ "application/json", "application/xml" ],
+        "produces" : [ "application/xml", "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "matchs caracteristics to find",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/MatchSearchItem"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "retrieve list of matchs matching with the parameters",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/MatchItem"
+              }
+            }
+          },
+          "405" : {
+            "description" : "Invalid input"
           }
         }
       }
@@ -307,6 +340,78 @@
         "id" : 1,
         "countryName" : "France",
         "seasonMax" : 2017
+      }
+    },
+    "MatchItem" : {
+      "type" : "object",
+      "required" : [ "date", "goalAway", "goalHome", "idCompetition", "season", "teamAway", "teamHome" ],
+      "properties" : {
+        "idCompetition" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "season" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 2012
+        },
+        "date" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "13/04/2015"
+        },
+        "teamHome" : {
+          "type" : "string",
+          "example" : "Lyon"
+        },
+        "teamAway" : {
+          "type" : "string",
+          "example" : "Saint-Etienne"
+        },
+        "goalHome" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 3
+        },
+        "goalAway" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 0
+        }
+      },
+      "example" : {
+        "date" : "13/04/2015",
+        "idCompetition" : 1,
+        "goalHome" : 3,
+        "goalAway" : 0,
+        "teamAway" : "Saint-Etienne",
+        "season" : 2012,
+        "teamHome" : "Lyon"
+      }
+    },
+    "MatchSearchItem" : {
+      "type" : "object",
+      "required" : [ "teamAway", "teamHome" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int32",
+          "example" : 1
+        },
+        "teamHome" : {
+          "type" : "string",
+          "example" : "Lyon"
+        },
+        "teamAway" : {
+          "type" : "string",
+          "example" : "Saint-Etienne"
+        }
+      },
+      "example" : {
+        "teamAway" : "Saint-Etienne",
+        "teamHome" : "Lyon",
+        "id" : 1
       }
     }
   }
